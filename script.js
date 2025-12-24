@@ -2,10 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const startBtn = document.getElementById('startBtn');
     const overlay = document.getElementById('overlay');
     
-    // Флаг, чтобы не срабатывало дважды
     let isAnimating = false;
     
-    // Общая функция для запуска анимации
     function hideOverlay() {
         if (isAnimating) return;
         isAnimating = true;
@@ -17,13 +15,19 @@ document.addEventListener('DOMContentLoaded', function() {
             overlay.style.display = 'none';
             startBtn.style.display = 'none';
             console.log('Элементы скрыты');
+
+            const video = document.getElementById('presentVideo');
+            video.style.pointerEvents = 'auto';
+            video.classList.add('show');
+
+            video.currentTime = 0;
+            video.pause();
+
         }, 1000);
     }
     
-    // Для клика (десктоп)
     startBtn.addEventListener('click', hideOverlay);
     
-    // Для тач-устройств
     startBtn.addEventListener('touchstart', function(e) {
         e.preventDefault();
         this.style.transform = 'scale(1.1)';
@@ -31,12 +35,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     startBtn.addEventListener('touchend', function(e) {
         e.preventDefault();
-        this.style.transform = 'scale(1)';
-        // Небольшая задержка для визуальной обратной связи
+        this.style.transform = 'scale(1.05)';
         setTimeout(() => hideOverlay(), 100);
     }, {passive: false});
     
-    // Также обрабатываем отмену тача (если палец увели за пределы кнопки)
     startBtn.addEventListener('touchcancel', function(e) {
         this.style.transform = 'scale(1)';
     });
