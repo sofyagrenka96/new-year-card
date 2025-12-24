@@ -135,6 +135,24 @@ function endDrag() {
         currentOrnament++;
         video.style.pointerEvents = 'auto';
         console.log('Игрушка повешена, следующая: ', currentOrnament);
+
+        if (currentOrnament >= 5) {
+        setTimeout(() => {
+            const finalMessage = document.getElementById('finalMessage');
+            const subMessage = document.getElementById('subMessage');
+        
+            if (finalMessage) {
+                finalMessage.classList.add('show');
+                console.log('Все игрушки повешены! Показываем надпись.');
+            }
+        
+            if (subMessage) {
+                setTimeout(() => {
+                    subMessage.classList.add('show');
+                }, 800); 
+            }
+        }, 800);
+}
         
     } else {
         currentOrnamentImg.style.transition = 'all 0.5s';
@@ -155,7 +173,7 @@ function endDrag() {
     
     startBtn.addEventListener('touchend', function(e) {
         e.preventDefault();
-        this.style.transform = 'scale(1)';
+        this.style.transform = 'scale(1.1)';
         setTimeout(() => hideOverlay(), 100);
     }, {passive: false});
     
