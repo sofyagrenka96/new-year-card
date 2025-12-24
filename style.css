@@ -100,48 +100,90 @@ body {
 }
 
 /*James*/
-.ornament {
+/* Общие стили для всех игрушек */
+.ornament-img {
     position: absolute;
     width: 31px;
-    height: 42px;
-
+    height: auto;
     left: 324px;
     top: 311px;
     opacity: 0;
     visibility: hidden;
-
     transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-    transform-origin: center center;
-    z-index: 20;
     pointer-events: none;
 }
 
-.ornament.show {
+.ornament-img.show {
     opacity: 1;
     visibility: visible;
     width: 65px;
-    height: 86px;
-    left: 308px;
-    top: 206px;
     pointer-events: auto;
-    cursor: grab;
 }
 
-.point {
+/* James */
+#ornament1 .ornament-img.show {
+    left: 308px;
+    top: 206px;
+}
+
+#ornament1 .ornament-point {
+    left: 220px;
+    top: 308px;
+}
+
+/* Keonho */
+#ornament2 .ornament-img.show {
+    left: 308px; 
+    top: 206px;
+}
+
+#ornament2 .ornament-point {
+    left: 143px;
+    top: 386px;
+}
+
+/* Seonghyeon */
+#ornament3 .ornament-img.show {
+    left: 308px; 
+    top: 206px;
+}
+
+#ornament3 .ornament-point {
+    left: 245px;
+    top: 477px;
+}
+
+/* Juhoon */
+#ornament4 .ornament-img.show {
+    left: 308px; 
+    top: 206px;
+}
+
+#ornament4 .ornament-point {
+    left: 115px;
+    top: 520px;
+}
+
+/* Martin */
+#ornament5 .ornament-img.show {
+    left: 308px; 
+    top: 206px;
+}
+
+#ornament5 .ornament-point {
+    left: 200px;
+    top: 595px;
+}
+
+.ornament-point {
     position: absolute;
     width: 12px;
     height: 12px;
     opacity: 0;
     visibility: hidden;
-    z-index: 18;
 }
 
-.point.show {
+.ornament-point.show {
     opacity: 1;
     visibility: visible;
-}
-
-#point1 {
-    left: 220px;
-    top: 312px;
 }

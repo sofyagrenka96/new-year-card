@@ -2,12 +2,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const startBtn = document.getElementById('startBtn');
     const overlay = document.getElementById('overlay');
     const video = document.getElementById('presentVideo');
-    const ornament = document.getElementById('ornament');
 
-    let videoPlayed = false;
+    let currentOrnament = 0;
+    const ornaments = Array.from(document.querySelectorAll('.ornament'));
     let blinkInterval = null;
     let isDragging = false;
+    let isHung = false;
     let startX, startY;
+    let currentOrnamentImg = null;
+    let currentOrnamentPoint = null;
 
     function hideOverlay() {
         overlay.classList.add('hidden');
@@ -23,104 +26,125 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     video.addEventListener('click', function() {
-        if (videoPlayed) return; 
-        videoPlayed = true;
+        if (currentOrnament >= ornaments.length) return;
+        if (isHung) return;
+        
+        const ornament = ornaments[currentOrnament];
+        currentOrnamentImg = ornament.querySelector('.ornament-img');
+        currentOrnamentPoint = ornament.querySelector('.ornament-point');
+        
         video.play().catch(e => console.log("Автовоспроизведение заблокировано"));
-    
+        video.style.pointerEvents = 'none';
+        
         video.addEventListener('timeupdate', function timeHandler() {
             if (video.currentTime >= 1.67) {
-                ornament.classList.add('show');
+                currentOrnamentImg.classList.add('show');
+                
                 setTimeout(() => {
-                    document.getElementById('point1').classList.add('show');
-                    startBlinking('point1');
+                    currentOrnamentPoint.classList.add('show');
+                    startBlinking(currentOrnamentPoint);
                 }, 800);
+                
                 video.removeEventListener('timeupdate', timeHandler);
             }
         });
-    
+        
         video.addEventListener('ended', function() {
-            video.currentTime = 0; 
+            video.currentTime = 0;
             video.pause();
         });
+
+        currentOrnamentImg.addEventListener('touchstart', startDrag, {passive: false});
+        currentOrnamentImg.addEventListener('mousedown', startDrag);
     });
 
-    function startBlinking(pointId) {
+    function startBlinking(point) {
         if (blinkInterval) clearInterval(blinkInterval);
-        const point = document.getElementById(pointId);
         let isRed = false;
         blinkInterval = setInterval(() => {
             point.src = isRed ? 'images/point.png' : 'images/point_red.png';
             isRed = !isRed;
-        }, 700); 
+        }, 700);
     }
 
-    ornament.addEventListener('touchstart', startDrag, {passive: false});
-    ornament.addEventListener('mousedown', startDrag);
-
     function startDrag(e) {
-        if (!ornament.classList.contains('show')) return;
+        if (!currentOrnamentImg.classList.contains('show') || isHung) return;
         isDragging = true;
-        ornament.style.transition = 'none';
+        currentOrnamentImg.style.transition = 'none';
         const touch = e.touches ? e.touches[0] : e;
-        startX = touch.clientX - ornament.offsetLeft;
-        startY = touch.clientY - ornament.offsetTop;
+        startX = touch.clientX - currentOrnamentImg.offsetLeft;
+        startY = touch.clientY - currentOrnamentImg.offsetTop;
+        e.preventDefault();
+    }
+
+    function moveDrag(e) {
+        if (!isDragging) return;
+        const touch = e.touches ? e.touches[0] : e;
+        currentOrnamentImg.style.left = (touch.clientX - startX) + 'px';
+        currentOrnamentImg.style.top = (touch.clientY - startY) + 'px';
         e.preventDefault();
     }
 
     document.addEventListener('touchmove', moveDrag, {passive: false});
     document.addEventListener('mousemove', moveDrag);
 
-    function moveDrag(e) {
-        if (!isDragging) return;
-        const touch = e.touches ? e.touches[0] : e;
-        ornament.style.left = (touch.clientX - startX) + 'px';
-        ornament.style.top = (touch.clientY - startY) + 'px';
-        e.preventDefault();
+function endDrag() {
+    if (!isDragging) return;
+    isDragging = false;
+
+    const ornamentRect = currentOrnamentImg.getBoundingClientRect();
+    const pointRect = currentOrnamentPoint.getBoundingClientRect();
+
+    const ornamentTopHalf = {
+        left: ornamentRect.left,
+        top: ornamentRect.top,
+        right: ornamentRect.right,
+        bottom: ornamentRect.top + currentOrnamentImg.offsetHeight / 2
+    };
+
+    const isIntersecting = !(
+        ornamentTopHalf.right < pointRect.left ||
+        ornamentTopHalf.left > pointRect.right ||
+        ornamentTopHalf.bottom < pointRect.top ||
+        ornamentTopHalf.top > pointRect.bottom
+    );
+
+    if (isIntersecting) {
+        const hangPositions = [
+            { left: '180px', top: '288px' }, // orn1
+            { left: '123px', top: '374px' }, // orn2 
+            { left: '225px', top: '462px' }, // orn3
+            { left: '89px', top: '502px' }, // orn4
+            { left: '180px', top: '578px' }  // orn5
+        ];
+        
+        const hangPos = hangPositions[currentOrnament];
+        currentOrnamentImg.style.left = hangPos.left;
+        currentOrnamentImg.style.top = hangPos.top;
+        currentOrnamentImg.style.transition = 'all 0.3s';
+        
+        currentOrnamentImg.removeEventListener('touchstart', startDrag);
+        currentOrnamentImg.removeEventListener('mousedown', startDrag);
+        
+        if (blinkInterval) {
+            clearInterval(blinkInterval);
+            blinkInterval = null;
+        }
+        currentOrnamentPoint.style.display = 'none';
+
+        currentOrnament++;
+        video.style.pointerEvents = 'auto';
+        console.log('Игрушка повешена, следующая: ', currentOrnament);
+        
+    } else {
+        currentOrnamentImg.style.transition = 'all 0.5s';
+        currentOrnamentImg.style.left = '';
+        currentOrnamentImg.style.top = '';
     }
+}
 
     document.addEventListener('touchend', endDrag, {passive: false});
     document.addEventListener('mouseup', endDrag);
-
-    function endDrag() {
-        if (!isDragging) return;
-        isDragging = false;
-
-        const ornamentRect = ornament.getBoundingClientRect();
-        const pointRect = document.getElementById('point1').getBoundingClientRect();
-
-        const ornamentTopHalf = {
-            left: ornamentRect.left,
-            top: ornamentRect.top,
-            right: ornamentRect.right,
-            bottom: ornamentRect.top + ornamentRect.height / 2
-        };
-
-        const isIntersecting = !(
-            ornamentTopHalf.right < pointRect.left ||
-            ornamentTopHalf.left > pointRect.right ||
-            ornamentTopHalf.bottom < pointRect.top ||
-            ornamentTopHalf.top > pointRect.bottom
-        );
-
-        if (isIntersecting) {
-            ornament.style.left = '187px';
-            ornament.style.top = '300px';
-            ornament.style.transition = 'all 0.3s';
-
-            ornament.removeEventListener('touchstart', startDrag);
-            ornament.removeEventListener('mousedown', startDrag);
-
-            if (blinkInterval) {
-                clearInterval(blinkInterval);
-                blinkInterval = null;
-            }
-            document.getElementById('point1').style.display = 'none';
-        } else {
-            ornament.style.left = '308px';
-            ornament.style.top = '206px';
-            ornament.style.transition = 'all 0.5s';
-        }
-    }
 
     startBtn.addEventListener('click', hideOverlay);
     
