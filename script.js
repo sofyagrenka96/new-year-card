@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const startBtn = document.getElementById('startBtn');
     const overlay = document.getElementById('overlay');
     const video = document.getElementById('presentVideo');
@@ -25,36 +25,36 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1000);
     }
 
-    video.addEventListener('click', function() {
+    video.addEventListener('click', function () {
         if (currentOrnament >= ornaments.length) return;
         if (isHung) return;
-        
+
         const ornament = ornaments[currentOrnament];
         currentOrnamentImg = ornament.querySelector('.ornament-img');
         currentOrnamentPoint = ornament.querySelector('.ornament-point');
-        
+
         video.play().catch(e => console.log("Автовоспроизведение заблокировано"));
         video.style.pointerEvents = 'none';
-        
+
         video.addEventListener('timeupdate', function timeHandler() {
             if (video.currentTime >= 1.67) {
                 currentOrnamentImg.classList.add('show');
-                
+
                 setTimeout(() => {
                     currentOrnamentPoint.classList.add('show');
                     startBlinking(currentOrnamentPoint);
                 }, 800);
-                
+
                 video.removeEventListener('timeupdate', timeHandler);
             }
         });
-        
-        video.addEventListener('ended', function() {
+
+        video.addEventListener('ended', function () {
             video.currentTime = 0;
             video.pause();
         });
 
-        currentOrnamentImg.addEventListener('touchstart', startDrag, {passive: false});
+        currentOrnamentImg.addEventListener('touchstart', startDrag, { passive: false });
         currentOrnamentImg.addEventListener('mousedown', startDrag);
     });
 
@@ -85,99 +85,159 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
     }
 
-    document.addEventListener('touchmove', moveDrag, {passive: false});
+    document.addEventListener('touchmove', moveDrag, { passive: false });
     document.addEventListener('mousemove', moveDrag);
 
-function endDrag() {
-    if (!isDragging) return;
-    isDragging = false;
+    function endDrag() {
+        if (!isDragging) return;
+        isDragging = false;
 
-    const ornamentRect = currentOrnamentImg.getBoundingClientRect();
-    const pointRect = currentOrnamentPoint.getBoundingClientRect();
+        const ornamentRect = currentOrnamentImg.getBoundingClientRect();
+        const pointRect = currentOrnamentPoint.getBoundingClientRect();
 
-    const ornamentTopHalf = {
-        left: ornamentRect.left,
-        top: ornamentRect.top,
-        right: ornamentRect.right,
-        bottom: ornamentRect.top + currentOrnamentImg.offsetHeight / 2
-    };
+        const ornamentTopHalf = {
+            left: ornamentRect.left,
+            top: ornamentRect.top,
+            right: ornamentRect.right,
+            bottom: ornamentRect.top + currentOrnamentImg.offsetHeight / 2
+        };
 
-    const isIntersecting = !(
-        ornamentTopHalf.right < pointRect.left ||
-        ornamentTopHalf.left > pointRect.right ||
-        ornamentTopHalf.bottom < pointRect.top ||
-        ornamentTopHalf.top > pointRect.bottom
-    );
+        const isIntersecting = !(
+            ornamentTopHalf.right < pointRect.left ||
+            ornamentTopHalf.left > pointRect.right ||
+            ornamentTopHalf.bottom < pointRect.top ||
+            ornamentTopHalf.top > pointRect.bottom
+        );
 
-    if (isIntersecting) {
-        const hangPositions = [
-            { left: '180px', top: '288px' }, // orn1
-            { left: '123px', top: '374px' }, // orn2 
-            { left: '225px', top: '462px' }, // orn3
-            { left: '89px', top: '502px' }, // orn4
-            { left: '180px', top: '578px' }  // orn5
-        ];
-        
-        const hangPos = hangPositions[currentOrnament];
-        currentOrnamentImg.style.left = hangPos.left;
-        currentOrnamentImg.style.top = hangPos.top;
-        currentOrnamentImg.style.transition = 'all 0.3s';
-        
-        currentOrnamentImg.removeEventListener('touchstart', startDrag);
-        currentOrnamentImg.removeEventListener('mousedown', startDrag);
-        
-        if (blinkInterval) {
-            clearInterval(blinkInterval);
-            blinkInterval = null;
-        }
-        currentOrnamentPoint.style.display = 'none';
+        if (isIntersecting) {
+            const hangPositions = [
+                { left: '180px', top: '288px' }, // orn1
+                { left: '123px', top: '374px' }, // orn2 
+                { left: '225px', top: '462px' }, // orn3
+                { left: '89px', top: '502px' }, // orn4
+                { left: '180px', top: '578px' }  // orn5
+            ];
 
-        currentOrnament++;
-        video.style.pointerEvents = 'auto';
-        console.log('Игрушка повешена, следующая: ', currentOrnament);
+            const hangPos = hangPositions[currentOrnament];
+            currentOrnamentImg.style.left = hangPos.left;
+            currentOrnamentImg.style.top = hangPos.top;
+            currentOrnamentImg.style.transition = 'all 0.3s';
 
-        if (currentOrnament >= 5) {
-        setTimeout(() => {
-            const finalMessage = document.getElementById('finalMessage');
-            const subMessage = document.getElementById('subMessage');
-        
-            if (finalMessage) {
-                finalMessage.classList.add('show');
-                console.log('Все игрушки повешены! Показываем надпись.');
+            currentOrnamentImg.removeEventListener('touchstart', startDrag);
+            currentOrnamentImg.removeEventListener('mousedown', startDrag);
+
+            if (blinkInterval) {
+                clearInterval(blinkInterval);
+                blinkInterval = null;
             }
-        
-            if (subMessage) {
+            currentOrnamentPoint.style.display = 'none';
+
+            currentOrnament++;
+            video.style.pointerEvents = 'auto';
+            console.log('Игрушка повешена, следующая: ', currentOrnament);
+
+            if (currentOrnament >= 5) {
                 setTimeout(() => {
-                    subMessage.classList.add('show');
-                }, 800); 
-            }
-        }, 800);
-}
-        
-    } else {
-        currentOrnamentImg.style.transition = 'all 0.5s';
-        currentOrnamentImg.style.left = '';
-        currentOrnamentImg.style.top = '';
-    }
-}
+                    const finalMessage = document.getElementById('finalMessage');
+                    const subMessage = document.getElementById('subMessage');
 
-    document.addEventListener('touchend', endDrag, {passive: false});
+                    if (finalMessage) {
+                        finalMessage.classList.add('show');
+                    }
+
+                    if (subMessage) {
+                        setTimeout(() => {
+                            subMessage.classList.add('show');
+                            // ВКЛЮЧАЕМ возможность кликать на игрушки!
+                            canTouchOrnaments = true;
+                            console.log('Теперь можно кликать на игрушки!');
+                        }, 800);
+                    }
+                }, 800);
+            }
+
+        } else {
+            currentOrnamentImg.style.transition = 'all 0.5s';
+            currentOrnamentImg.style.left = '';
+            currentOrnamentImg.style.top = '';
+        }
+    }
+
+    document.addEventListener('touchend', endDrag, { passive: false });
     document.addEventListener('mouseup', endDrag);
 
     startBtn.addEventListener('click', hideOverlay);
-    
-    startBtn.addEventListener('touchstart', function(e) {
+
+    startBtn.addEventListener('touchstart', function (e) {
         e.preventDefault();
         this.style.transform = 'scale(1.1)';
-    }, {passive: false});
-    
-    startBtn.addEventListener('touchend', function(e) {
+    }, { passive: false });
+
+    startBtn.addEventListener('touchend', function (e) {
         e.preventDefault();
         this.style.transform = 'scale(1.1)';
         setTimeout(() => hideOverlay(), 100);
-    }, {passive: false});
-    
-    startBtn.addEventListener('touchcancel', function(e) {
+    }, { passive: false });
+
+    startBtn.addEventListener('touchcancel', function (e) {
         this.style.transform = 'scale(1)';
+    });
+
+    // ========== ОТКРЫТИЕ ФРЕЙМОВ ==========
+    let canTouchOrnaments = false; 
+    
+    // Игрушка 1 (James)
+    document.getElementById('ornament1').addEventListener('click', function () {
+        if (canTouchOrnaments) {
+            openFrame('jamesFrame');
+        }
+    });
+
+    // Игрушка 2 (Keonho)
+    document.getElementById('ornament2').addEventListener('click', function () {
+        if (canTouchOrnaments) {
+            openFrame('keonhoFrame');
+        }
+    });
+
+    function openFrame(frameId) {
+        const overlay = document.getElementById('modalOverlay');
+        const frame = document.getElementById(frameId);
+
+        overlay.classList.add('show');
+        frame.classList.add('show');
+
+        const video = frame.querySelector('.frame-video');
+        setTimeout(() => {
+            video.play().catch(e => console.log("Видео не запустилось"));
+        }, 500);
+
+        const closeBtn = frame.querySelector('.frame-close');
+        closeBtn.onclick = function () {
+            closeAllFrames();
+        };
+
+        overlay.onclick = function () {
+            closeAllFrames();
+        };
+    }
+
+    function closeAllFrames() {
+        document.getElementById('modalOverlay').classList.remove('show');
+
+        document.querySelectorAll('.frame').forEach(frame => {
+            frame.classList.remove('show');
+            const video = frame.querySelector('.frame-video');
+            if (video) {
+                video.pause();
+                video.currentTime = 0;
+            }
+        });
+    }
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            closeAllFrames();
+        }
     });
 });

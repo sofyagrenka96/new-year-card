@@ -227,3 +227,98 @@ body {
     opacity: 0.6;
     transform: translateY(0);
 }
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 40;
+    transition: opacity 0.3s;
+}
+
+.modal-overlay.show {
+    opacity: 0.95;
+    visibility: visible;
+}
+
+.frame {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    opacity: 0;
+    visibility: hidden;
+    z-index: 50;
+}
+
+.frame.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.frame-bow {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    height: auto;
+}
+
+.frame-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.frame-name {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Allura', cursive;
+    text-align: center;
+}
+
+.frame-close {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background: none;
+    border: none;
+    font-family: 'Averia Sans Libre', cursive;
+    color: #9b1017;
+    cursor: pointer;
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+    padding: 0;
+}
+
+/* James фрейм */
+.frame-james {
+    width: 366px;
+    height: 450px;
+}
+.frame-james .frame-bow {
+    top: 10px;
+    width: 45px;
+}
+.frame-james .frame-video {
+    width: 330px;
+}
+.frame-james .frame-name {
+    top: 390px;
+    font-size: 48px;
+    color: #9b1017;
+}
+.frame-james .frame-close {
+    top: 450px;
+    font-size: 48px;
+}
