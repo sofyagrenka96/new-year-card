@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
     video.addEventListener('click', function () {
         if (currentOrnament >= ornaments.length) return;
         if (isHung) return;
+        video.muted = true;
 
         const ornament = ornaments[currentOrnament];
         currentOrnamentImg = ornament.querySelector('.ornament-img');
