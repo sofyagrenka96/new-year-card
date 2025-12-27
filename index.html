@@ -7,6 +7,7 @@
     <title>С новым годом!</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Allura&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Averia+Sans+Libre&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -55,8 +56,6 @@
         </div>
 
     </div>
-
-    <link href="https://fonts.googleapis.com/css2?family=Allura&display=swap" rel="stylesheet">
 
     <!-- Overlay -->
     <div class="modal-overlay" id="modalOverlay"></div>
@@ -111,15 +110,16 @@
         <button class="frame-close">X</button>
     </div>
 
+    <audio id="bgMusic" loop playsinline>
+        <source src="sound/jingle.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="ornamentSound" preload="auto">
+        <source src="sound/open.mp3" type="audio/mpeg">
+    </audio>
+
     <script src="script.js"></script>
+
 </body>
-
-<audio id="bgMusic" loop playsinline>
-    <source src="sound/jingle.mp3" type="audio/mpeg">
-</audio>
-
-<audio id="ornamentSound" preload="auto">
-    <source src="sound/open.mp3" type="audio/mpeg">
-</audio>
 
 </html>

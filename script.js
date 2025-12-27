@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     setTimeout(() => {
                         sound.pause();
-                        sound.currentTime = 0;
+                        sound.currentTime = 300;
                     }, 1000);
                 }
 
