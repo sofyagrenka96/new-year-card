@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Allura&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="container">
         <img src="images/tree.JPG" alt="Елка" class="tree-image">
@@ -47,12 +49,14 @@
         <div class="final-message" id="finalMessage">
             Happy New Year!
         </div>
-        
+
         <div class="sub-message" id="subMessage">
             p.s. touch them
         </div>
 
     </div>
+
+    <link href="https://fonts.googleapis.com/css2?family=Allura&display=swap" rel="stylesheet">
 
     <!-- Overlay -->
     <div class="modal-overlay" id="modalOverlay"></div>
@@ -67,6 +71,55 @@
         <button class="frame-close">X</button>
     </div>
 
+    <!-- Фрейм для Keonho -->
+    <div class="frame frame-keonho" id="keonhoFrame">
+        <img class="frame-bow" src="images/bow.jpg" alt="Бантик">
+        <video class="frame-video" playsinline>
+            <source src="video/v_keonho.mp4" type="video/mp4">
+        </video>
+        <div class="frame-name">Keonho</div>
+        <button class="frame-close">X</button>
+    </div>
+
+    <!-- Фрейм для Seon -->
+    <div class="frame frame-seon" id="seonFrame">
+        <img class="frame-bow" src="images/bow.jpg" alt="Бантик">
+        <video class="frame-video" playsinline>
+            <source src="video/v_seon.mp4" type="video/mp4">
+        </video>
+        <div class="frame-name">Seonghyeon</div>
+        <button class="frame-close">X</button>
+    </div>
+
+    <!-- Фрейм для Juhoon -->
+    <div class="frame frame-juhoon" id="juhoonFrame">
+        <img class="frame-bow" src="images/bow.jpg" alt="Бантик">
+        <video class="frame-video" playsinline>
+            <source src="video/v_juhoon.mp4" type="video/mp4">
+        </video>
+        <div class="frame-name">Juhoon</div>
+        <button class="frame-close">X</button>
+    </div>
+
+    <!-- Фрейм для Martin -->
+    <div class="frame frame-martin" id="martinFrame">
+        <img class="frame-bow" src="images/bow.jpg" alt="Бантик">
+        <video class="frame-video" playsinline>
+            <source src="video/v_martin.mp4" type="video/mp4">
+        </video>
+        <div class="frame-name">Martin</div>
+        <button class="frame-close">X</button>
+    </div>
+
     <script src="script.js"></script>
 </body>
+
+<audio id="bgMusic" loop playsinline>
+    <source src="sound/jingle.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="ornamentSound" preload="auto">
+    <source src="sound/open.mp3" type="audio/mpeg">
+</audio>
+
 </html>

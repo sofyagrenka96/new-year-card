@@ -40,6 +40,18 @@ document.addEventListener('DOMContentLoaded', function () {
             if (video.currentTime >= 1.67) {
                 currentOrnamentImg.classList.add('show');
 
+                const sound = document.getElementById('ornamentSound');
+                sound.volume = 0.08;
+                if (sound) {
+                    sound.currentTime = 0;
+                    sound.play().catch(e => console.log("Звук не воспроизвелся"));
+
+                    setTimeout(() => {
+                        sound.pause();
+                        sound.currentTime = 0;
+                    }, 1000);
+                }
+
                 setTimeout(() => {
                     currentOrnamentPoint.classList.add('show');
                     startBlinking(currentOrnamentPoint);
@@ -148,12 +160,20 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (subMessage) {
                         setTimeout(() => {
                             subMessage.classList.add('show');
-                            // ВКЛЮЧАЕМ возможность кликать на игрушки!
                             canTouchOrnaments = true;
-                            console.log('Теперь можно кликать на игрушки!');
+
+                            video.style.transition = 'all 0.5s ease-out';
+                            video.style.opacity = '0';
+                            video.style.visibility = 'hidden';
+                            video.style.left = '380px';
+
+                            setTimeout(() => {
+                                video.style.display = 'none';
+                            }, 500);
+
                         }, 800);
                     }
-                }, 800);
+                }, 600);
             }
 
         } else {
@@ -167,6 +187,32 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('mouseup', endDrag);
 
     startBtn.addEventListener('click', hideOverlay);
+    startBtn.addEventListener('click', startMusic);
+
+    startBtn.addEventListener('touchstart', startMusic, { passive: false });
+
+    function startMusic(e) {
+        e.preventDefault();
+
+        const bgMusic = document.getElementById('bgMusic');
+        if (!bgMusic) return;
+
+        bgMusic.currentTime = 0;
+        bgMusic.volume = 0.35;
+
+        const playPromise = bgMusic.play();
+
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                bgMusic.muted = true;
+                bgMusic.play().then(() => {
+                    setTimeout(() => {
+                        bgMusic.muted = false;
+                    }, 1000);
+                });
+            });
+        }
+    }
 
     startBtn.addEventListener('touchstart', function (e) {
         e.preventDefault();
@@ -184,8 +230,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ========== ОТКРЫТИЕ ФРЕЙМОВ ==========
-    let canTouchOrnaments = false; 
-    
+    let canTouchOrnaments = false;
+
     // Игрушка 1 (James)
     document.getElementById('ornament1').addEventListener('click', function () {
         if (canTouchOrnaments) {
@@ -200,14 +246,42 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // Игрушка 3 (Seonghyeon)
+    document.getElementById('ornament3').addEventListener('click', function () {
+        if (canTouchOrnaments) {
+            openFrame('seonFrame');
+        }
+    });
+
+    // Игрушка 4 (Juhoon)
+    document.getElementById('ornament4').addEventListener('click', function () {
+        if (canTouchOrnaments) {
+            openFrame('juhoonFrame');
+        }
+    });
+
+    // Игрушка 5 (Martin)
+    document.getElementById('ornament5').addEventListener('click', function () {
+        if (canTouchOrnaments) {
+            openFrame('martinFrame');
+        }
+    });
+
+
     function openFrame(frameId) {
         const overlay = document.getElementById('modalOverlay');
         const frame = document.getElementById(frameId);
+        const bgMusic = document.getElementById('bgMusic');
+
+        if (bgMusic && !bgMusic.paused) {
+            fadeOutAudio(bgMusic, 500);
+        }
 
         overlay.classList.add('show');
         frame.classList.add('show');
 
         const video = frame.querySelector('.frame-video');
+        video.loop = true;
         setTimeout(() => {
             video.play().catch(e => console.log("Видео не запустилось"));
         }, 500);
@@ -233,6 +307,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 video.currentTime = 0;
             }
         });
+        const bgMusic = document.getElementById('bgMusic');
+        if (bgMusic && bgMusic.currentTime > 0) {
+            fadeInAudio(bgMusic, 1000);
+        }
     }
 
     document.addEventListener('keydown', function (e) {
@@ -240,4 +318,40 @@ document.addEventListener('DOMContentLoaded', function () {
             closeAllFrames();
         }
     });
+
+    function fadeOutAudio(audio, duration) {
+        const startVolume = audio.volume;
+        const stepTime = 50;
+        const steps = duration / stepTime;
+        const stepDecrease = startVolume / steps;
+
+        const fadeInterval = setInterval(() => {
+            if (audio.volume > stepDecrease) {
+                audio.volume -= stepDecrease;
+            } else {
+                audio.volume = 0;
+                clearInterval(fadeInterval);
+                audio.pause();
+            }
+        }, stepTime);
+    }
+
+    function fadeInAudio(audio, duration) {
+        audio.volume = 0.2;
+        audio.play().catch(e => console.log("Не удалось возобновить музыку"));
+
+        const targetVolume = 0.35;
+        const stepTime = 50;
+        const steps = duration / stepTime;
+        const stepIncrease = (targetVolume - 0.2) / steps;
+
+        const fadeInterval = setInterval(() => {
+            if (audio.volume < targetVolume) {
+                audio.volume += stepIncrease;
+            } else {
+                audio.volume = targetVolume;
+                clearInterval(fadeInterval);
+            }
+        }, stepTime);
+    }
 });
